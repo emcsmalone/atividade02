@@ -36,3 +36,52 @@ Para o correto funcionamento do script integrado entre Terraform e Ansible, a su
 ├── README.md
 └── variables.tf
 ```
+
+## Como Executar
+
+### 1. Inicializar o Terraform
+Criando um bucket s3
+
+```
+aws s3api create-bucket --bucket s3-backend-malauala0001
+
+```
+Inicializando o terraform
+```
+terraform init
+```
+### Validação e Formatação
+```
+terraform fmt -check
+terraform validate
+
+Success! The configuration is valid
+
+```
+### Utilizando Workspaces
+DEV
+
+```
+terraform workspace select dev || terraform workspace new dev && terraform apply -var="meu_ip=SEU_IP/32"
+
+```
+PROD
+
+```
+terraform workspace select prod || terraform workspace new prod && terraform apply -var="meu_ip=SEU_IP/32"
+```
+
+### Limpeza da infraestrutura
+
+DEV
+
+´´´terraform workspace select dev 
+terraform destroy -var="meu_ip=SEU_IP/32"
+
+```
+PROD 
+
+```
+terraform workspace select prod 
+```
+terraform destroy -var="meu_ip=SEU_IP/32"

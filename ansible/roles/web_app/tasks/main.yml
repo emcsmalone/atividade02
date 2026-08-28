@@ -1,0 +1,57 @@
+---
+- name: Instalar pacotes do sistema (Docker, Pip e Git)
+  ansible.builtin.dnf:
+    name:
+      - docker
+      - python3-pip
+      - git
+    state: present
+
+- name: Garantir que o servico do Docker esta rodando e habilitado
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Instalar SDK do Docker para Python
+  ansible.builtin.pip:
+    name: 
+      - docker
+      - requests==2.31.0
+    state: present
+    executable: pip3
+    extra_args: "--ignore-installed"
+
+- name: Clonar o repositorio do aplicativo de Todo (Tutorial)
+  ansible.builtin.git:
+    repo: https://github.com/docker/getting-started-app.git
+    dest: /opt/getting-started-app
+    force: yes
+
+- name: Criar o Dockerfile exigido pelo tutorial
+  ansible.builtin.copy:
+    dest: /opt/getting-started-app/Dockerfile
+    content: |
+      FROM node:20-alpine
+      WORKDIR /app
+      COPY package.json ./
+      RUN yarn install --production
+      COPY . .
+      CMD ["node", "src/index.js"]
+      EXPOSE 3000
+
+- name: Fazer o build da imagem Docker localmente
+  community.docker.docker_image:
+    name: tutorial-todo-app
+    build:
+      path: /opt/getting-started-app
+    source: build
+
+- name: Executar o container da aplicacao
+  community.docker.docker_container:
+    name: todo-app
+    image: tutorial-todo-app
+    state: started
+    restart_policy: always
+    ports:
+      - "3000:3000"

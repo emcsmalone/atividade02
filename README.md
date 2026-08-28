@@ -1,28 +1,31 @@
-# Atividade 1 - Provisionamento de Infraestrutura Web na AWS com Terraform
+Este documento descreve o passo a passo para replicar a infraestrutura e a configuração de um ambiente na AWS que sobe a aplicação do tutorial oficial do Docker (`getting-started-app`). Toda a arquitetura foi desenhada no modelo de Infraestrutura como Código (IaC).
 
-Este repositório contém a infraestrutura como código (IaC) necessária para provisionar um servidor web na AWS, utilizando as melhores práticas de Terraform (State Remoto, Workspaces, Módulos e Variáveis).
+## 1. Pré-requisitos
 
-##  Pré-requisitos
+Antes de iniciar, certifique-se de ter os seguintes componentes instalados e configurados na sua máquina local (Control Node):
 
-Para executar este projeto, você precisará ter instalado em sua máquina:
-*   [Terraform](https://developer.hashicorp.com/terraform/downloads) (versão >= 1.0)
-*   [AWS CLI](https://aws.amazon.com/cli/) devidamente configurado com credenciais válidas. **Nenhuma credencial está versionada neste repositório por questões de segurança.**
-*   Saber seu IP público (acesse [meuip.com.br](https://meuip.com.br) para descobrir).
+*   **Terraform:** Para o provisionamento da infraestrutura AWS.
+*   **Ansible:** Para a gerência de configuração (versão `ansible-core` atualizada).
+*   **Coleção Ansible para Docker:** Instalada através do comando: `ansible-galaxy collection install community.docker`
+*   **Credenciais da AWS:** Chaves de acesso AWS (AWS CLI configurado) para que o Terraform crie os recursos.
+*   **Chave SSH:** O arquivo `.pem` (ex: `labsuser.pem`) que será utilizado para se conectar à instância EC2 provisionada.
 
-## Configurações Iniciais
+## 2. Estrutura de Diretórios
 
-### 1. Bucket de Backend
-O controle de estado (State Remoto) está configurado para utilizar o Amazon S3 com bloqueio de estado habilitado.
-*   **Bucket utilizado:** `[INSIRA_AQUI_O_NOME_DO_SEU_BUCKET]`
-*   *Nota:* O bucket foi criado manualmente via AWS Console antes da inicialização.
+Para o correto funcionamento do script integrado entre Terraform e Ansible, a sua estrutura de pastas e arquivos deve ser a seguinte:
 
-### 2. Variáveis Obrigatórias
-Durante a execução, você precisará informar seu IP público para a liberação da porta SSH (22). As portas HTTP (80) já estão abertas para o mundo.
+```text
 
-## Estrutura do projeto
-
-```
-~/iac/
+├── ansible
+│   ├── ansible.cfg
+│   ├── inventory_aws_ec2.yml
+│   ├── playbook.yml
+│   ├── roles
+│   │   └── web_app
+│   │       └── tasks
+│   │           └── main.yml
+│   └── vault.yml
+├── evidencias
 ├── main.tf
 ├── modules
 │   └── servidor-web
@@ -30,6 +33,7 @@ Durante a execução, você precisará informar seu IP público para a liberaç�
 │       ├── outputs.tf
 │       └── variables.tf
 ├── outputs.tf
+├── README.md
 └── variables.tf
 ```
 
@@ -81,11 +85,3 @@ PROD
 terraform workspace select prod 
 ```
 terraform destroy -var="meu_ip=SEU_IP/32"
-```
-
-### Deletando S3
-
-```
-aws s3 rb s3://s3-backend-malauala0001 --force
-
-```

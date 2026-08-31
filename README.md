@@ -43,7 +43,7 @@ Para o correto funcionamento do script integrado entre Terraform e Ansible, a su
 Criando um bucket s3
 
 ```
-aws s3api create-bucket --bucket s3-backend-malauala0001
+aws s3api create-bucket --bucket s3-backend-malauala00001
 
 ```
 Inicializando o terraform
@@ -58,8 +58,16 @@ terraform validate
 Success! The configuration is valid
 
 ```
+
+### Criar Par de chaves ssh na AWS 
+
 ### Utilizando Workspaces
+
+```
 DEV
+
+```
+curl ifconfig.me 
 
 ```
 terraform workspace select dev || terraform workspace new dev && terraform apply -var="meu_ip=SEU_IP/32"
@@ -85,3 +93,9 @@ PROD
 terraform workspace select prod 
 ```
 terraform destroy -var="meu_ip=SEU_IP/32"
+```
+### Limpeza total 
+
+```
+rm -rf atividade2/.terraform*
+```

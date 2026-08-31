@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "s3-backend-malauala0001" # Altere para o seu bucket
+    bucket       = "s3-backend-malauala00001" #Altere para o seu bucket
     key          = "atividade1/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true

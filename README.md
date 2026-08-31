@@ -60,20 +60,21 @@ Success! The configuration is valid
 ```
 
 ### Criar Par de chaves ssh na AWS 
+No diretorio evidencias criar_par_de_chaves_ssh.png
 
 ### Utilizando Workspaces
 
-```
-DEV
+
+**DEV**
 
 ```
 curl ifconfig.me 
-
+```
 ```
 terraform workspace select dev || terraform workspace new dev && terraform apply -var="meu_ip=SEU_IP/32"
-
 ```
-PROD
+
+**PROD**
 
 ```
 terraform workspace select prod || terraform workspace new prod && terraform apply -var="meu_ip=SEU_IP/32"
@@ -81,16 +82,18 @@ terraform workspace select prod || terraform workspace new prod && terraform app
 
 ### Limpeza da infraestrutura
 
-DEV
-
-´´´terraform workspace select dev 
-terraform destroy -var="meu_ip=SEU_IP/32"
+**DEV**
 
 ```
-PROD 
+terraform workspace select dev 
+terraform destroy -var="meu_ip=SEU_IP/32"
+```
+
+**PROD** 
 
 ```
 terraform workspace select prod 
+```
 ```
 terraform destroy -var="meu_ip=SEU_IP/32"
 ```
